@@ -1,20 +1,24 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 投資インテリジェンス ダッシュボード (FIN-INTELLIGENCE Dashboard)
+## 概要 (Overview)
+個人投資家向けのAI駆動型金融情報ダッシュボードです。指定された銘柄の最新状況や、市場に影響を与える重要ニュースをGemini AIが自動で収集・選定し、分かりやすい形式で提供します。ゴシップやノイズとなる情報を排除し、投資判断に必要な情報（業績・業務提携・マクロ経済など）だけを素早くキャッチできるように設計されています。
 
-# Run and deploy your AI Studio app
+## 主な機能 (Features)
+* **🤖 AIニュース選定・要約モジュール:**
+  *  膨大な情報から重要な金融・経済動向に関するニュースを厳選し、客観的な事実のみを「3行の箇条書き」で要約して表示します。
+* **📈 ウォッチリスト管理 (AI自動取得)**
+  * 銘柄名を入力するだけで、AIが自動的に直近の株価と前日比を推定・取得し、追加します。煩雑なシンボルコードの入力は不要です。
+* **🔄 最新情報の手動一括更新**
+  * 「更新」ボタンから、現在のウォッチリストに基づいて最新の市場概況、ニュース、銘柄の株価情報を一括で再取得させることができます。
+* **🎌 リアルタイム市場概況の表示**
+  *  日経平均株価やUSD/JPY為替レートなどをヘッダーに常時表示します。
 
-This contains everything you need to run your app locally.
+## 技術スタック (Tech Stack)
+* **フロントエンド:** React、TypeScript、Vite
+* **UI/スタイリング:** Tailwind CSS, Lucide React (アイコン)
+* **AIコラボレーション:** Google Gen AI SDK (@google/genes), Gemini Model (リアルタイムデータ取得・ニュース要約・JSON構造化として活用)
 
-View your app in AI Studio: https://ai.studio/apps/d588a424-fae2-4e62-b9f8-2e8e40a6a7cd
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 使い方 (How to use)
+1. **ダッシュボードの閲覧:** アプリを開くと、最新の市場概況と重要ニュースが自動で読み込まれます。
+2. **銘柄の追加:** 左側のサイドバー下部にある「AI自動取得ツール」に「任天堂」などの企業名を入力し「追加」を押すことで、AIが株価と変動率を取得しリスト化します。
+3. **銘柄の削除:** ウォッチリストの銘柄にカーソルを合わせ、右側に表示される「×」ボタンを押して削除します。
+4. **情報の更新:** ニュースエリアの見出し横にある「更新」ボタンをクリックし、手動で最新の情報を取得します（ローディングが走ります）。
