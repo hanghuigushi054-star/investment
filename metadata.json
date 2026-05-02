@@ -1,0 +1,6 @@
+{
+  "name": "投資インテリジェンス ダッシュボード",
+  "description": "個人投資家向けのAI駆動型金融情報ダッシュボード。Gemini AIを活用した最新ニュースの自動要約、ウォッチリストの管理、リアルタイムの市場概況（日経平均・ドル円）を提供します。",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
