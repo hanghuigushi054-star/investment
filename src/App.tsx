@@ -40,11 +40,17 @@ export default function App() {
     setIsDashboardLoading(true);
     try {
       const watchNames = watchlist.map(w => w.name).join('、');
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `現在の最新の市場概況（日経平均、ドル円）、および以下のウォッチリスト銘柄（${watchNames || '無し'}）の最新の株価と前日比推定値、さらに直近で重要な日本の金融・経済・企業動向に関する実際のニュース3件とその要約（それぞれ3箇条書き）を取得してJSONで出力してください。themeColorはニュースカテゴリに合わせて "blue", "orange", "purple", "green", "red" のいずれかを指定してください。`,
+        contents: `今日（${dateStr}）の最新市場データをGoogle検索を用いて取得し、以下の内容をJSON出力してください。
+1. 日経平均とドル円の最新価格と前日比（日経平均は価格に「円」を付けること）
+2. ウォッチリスト銘柄（${watchNames || '無し'}）の最新の株価（または直近の終値）と前日比。「[銘柄名] 株価」で検索し、実際の正確な取引価格を取得してください。日本の銘柄には「円」を付けてください。推測値は厳禁です。
+3. 直近で重要な日本の金融・経済・企業動向に関する実際のニュース3件とその要約（それぞれ3箇条書き）。themeColorはニュースカテゴリに合わせて "blue", "orange", "purple", "green", "red" のいずれかを指定してください。`,
         config: {
           responseMimeType: "application/json",
+          tools: [{ googleSearch: {} }],
           responseSchema: {
             type: Type.OBJECT,
             properties: {
@@ -139,9 +145,10 @@ export default function App() {
     try {
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `Find the recent approximate stock price and daily change percentage for the company: "${newName}". Return JSON with exactly these fields: "price" (string, e.g. "1,234.0"), "change" (string, e.g. "+1.2%" or "-0.8%"), "isPositive" (boolean). If you can't find exact real-time data, provide a realistic recent estimate.`,
+        contents: `ウェブ検索を使用して、今日現在の「${newName} 株価」を検索し、正確な最新の株価（または直近の終値）と前日比を取得してください。推測値ではなく実際の金融データを取得してください。日本の企業の場合は価格に必ず「円」を付けてください（例: "3,452円"）。JSON形式で、"price"（文字列）、"change"（文字列、例: "+1.2%" または "-0.8%" または "-120円"）、"isPositive"（真偽値）を返してください。`,
         config: {
           responseMimeType: "application/json",
+          tools: [{ googleSearch: {} }],
           responseSchema: {
             type: Type.OBJECT,
             properties: {
@@ -226,9 +233,19 @@ export default function App() {
         {/* Sidebar Watchlist */}
         <aside className="w-80 bg-white border-r border-[#E2E8F0] p-6 flex flex-col gap-6 hidden md:flex shrink-0">
           <div className="overflow-y-auto flex-1 pr-2">
-            <h2 className="text-[11px] font-bold text-[#8E9299] tracking-widest mb-4">
-              ウォッチリスト
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-[11px] font-bold text-[#8E9299] tracking-widest">
+                ウォッチリスト
+              </h2>
+              <button
+                onClick={fetchLatestDashboard}
+                disabled={isDashboardLoading}
+                className="text-[#8E9299] hover:text-blue-500 transition-colors disabled:opacity-50"
+                title="最新のデータに更新"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isDashboardLoading ? 'animate-spin' : ''}`} />
+              </button>
+            </div>
             <div className="space-y-1">
               {watchlist.map(item => (
                 <div key={item.id} className="flex flex-col gap-0.5 py-2 border-b border-gray-100 last:border-0 group">
